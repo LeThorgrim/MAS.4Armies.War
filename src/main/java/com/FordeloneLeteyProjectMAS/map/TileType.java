@@ -1,6 +1,6 @@
 package com.FordeloneLeteyProjectMAS.map;
 
-//principalement utilisé pour les mouvements & interactions entre unités
+// mainly used for movements & interactions between units
 
 public enum TileType {
     OCCUPIED_BY_UNIT,
