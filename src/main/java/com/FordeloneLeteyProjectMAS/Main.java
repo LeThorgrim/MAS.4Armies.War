@@ -8,7 +8,7 @@ public class Main {
 
         GameContext gameContext = GameContext.getInstance();
 
-        Tile tileToTest = gameContext.getMap().getTileAt(0, 0);
-        System.out.println("Tile at (0,0) Zone Type: " + tileToTest.getZoneType());
+        //Tile tileToTest = gameContext.getMap().getTileAt(0, 0);
+        //System.out.println("Tile at (0,0) Zone Type: " + tileToTest.getZoneType());
     }
 }

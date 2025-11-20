@@ -3,10 +3,12 @@ package com.FordeloneLeteyProjectMAS;
 import com.FordeloneLeteyProjectMAS.map.Map;
 import com.FordeloneLeteyProjectMAS.map.Tile;
 import com.FordeloneLeteyProjectMAS.map.TileZoneType;
+import com.FordeloneLeteyProjectMAS.unit.FactionType;
+import com.FordeloneLeteyProjectMAS.unit.KnowledgeType;
+import com.FordeloneLeteyProjectMAS.unit.Master;
 import com.FordeloneLeteyProjectMAS.unit.Unit;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class GameContext {
     // GameContext is a singleton that holds :
@@ -20,6 +22,8 @@ public class GameContext {
     private GameContext() {
         gameMap = new Map(14, 10);
         initializeTileZoneTypes();
+        //initializeUnits
+        initializeMasters();
     }
 
     private void initializeTileZoneTypes(){
@@ -54,8 +58,31 @@ public class GameContext {
         }
     }
 
-    private void initializeUnits(){
-        //TODO
+    private void initializeMasters(){
+        //Init 1 master of each faction in each corner
+        Master humanMaster = new Master(0, 0, FactionType.FACTION_HUMAN);
+        Master orcMaster = new Master(gameMap.getWidth() - 1, 0, FactionType.FACTION_ORC);
+        Master elfMaster = new Master(0, gameMap.getHeight() - 1, FactionType.FACTION_ELF);
+        Master goblinMaster = new Master(gameMap.getWidth() - 1, gameMap.getHeight() - 1, FactionType.FACTION_GOBLIN);
+
+        units.add(humanMaster);
+        units.add(orcMaster);
+        units.add(elfMaster);
+        units.add(goblinMaster);
+
+        //there is 20 knowledges to share, we give 5 different knowledges to each master
+        List<KnowledgeType> knowledgeList = new ArrayList<>(Set.of(KnowledgeType.values()));
+        Collections.shuffle(knowledgeList); //add a bit of randomness :p
+
+        //use sublist to give each master 5 different knowledges (recast to HashSet to match the type)
+        humanMaster.setKnownKnowledge(new HashSet<>(knowledgeList.subList(0,5)));
+        orcMaster.setKnownKnowledge(new HashSet<>(knowledgeList.subList(5,10)));
+        elfMaster.setKnownKnowledge(new HashSet<>(knowledgeList.subList(10,15)));
+        goblinMaster.setKnownKnowledge(new HashSet<>(knowledgeList.subList(15,20)));
+    }
+
+    private void initializeSoldiers(){
+        //TODO : init some soldiers for each faction
     }
 
     public static GameContext getInstance() {
