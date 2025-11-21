@@ -1,5 +1,6 @@
-package com.FordeloneLeteyProjectMAS;
+package com.FordeloneLeteyProjectMAS.game;
 
+import com.FordeloneLeteyProjectMAS.diplomacy.RelationManager;
 import com.FordeloneLeteyProjectMAS.map.Map;
 import com.FordeloneLeteyProjectMAS.map.Tile;
 import com.FordeloneLeteyProjectMAS.map.TileZoneType;
@@ -16,14 +17,22 @@ public class GameContext {
 
     private static GameContext instance = null;
     private final Map gameMap;
+    private final RelationManager relationManager =  null;
     private final List<Unit> units = new ArrayList<>();
 
     // Private constructor to prevent instantiation
     private GameContext() {
+        System.out.println("[GameContext] Initializing game context...");
+        //initialize map
         gameMap = new Map(14, 10);
         initializeTileZoneTypes();
-        //initializeUnits
+        //initialize diplomacy
+        RelationManager.getInstance();
+        //initialize units
         initializeMasters();
+        System.out.println("[GameContext] Game context initialized.");
+
+        //TODO : play
     }
 
     private void initializeTileZoneTypes(){
@@ -88,8 +97,14 @@ public class GameContext {
     public static GameContext getInstance() {
         if (instance == null) {
             instance = new GameContext();
+            System.out.println("[GameContext] Instance created");
         }
         return instance;
+    }
+
+    public static void resetInstance() {
+        instance = null;
+        System.out.println("[GameContext] Instance reset");
     }
 
     public Map getMap() {

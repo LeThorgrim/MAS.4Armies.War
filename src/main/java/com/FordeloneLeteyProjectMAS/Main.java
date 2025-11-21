@@ -1,6 +1,6 @@
 package com.FordeloneLeteyProjectMAS;
 
-import com.FordeloneLeteyProjectMAS.map.Tile;
+import com.FordeloneLeteyProjectMAS.game.GameContext;
 
 public class Main {
     public static void main(String[] args) {
