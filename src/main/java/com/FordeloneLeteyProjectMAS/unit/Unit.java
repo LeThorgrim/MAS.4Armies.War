@@ -7,19 +7,22 @@ public abstract class Unit {
     private int y;
     private Set<KnowledgeType> knownKnowledge; //set = no duplicate knowledge
     private FactionType factionType;
+    private UnitType unitType;
 
-    public Unit(int x, int y, FactionType factionType) {
+    public Unit(int x, int y, FactionType factionType, UnitType unitType) {
         this.x = x;
         this.y = y;
         this.knownKnowledge = Set.of();
         this.factionType = factionType;
+        this.unitType = unitType;
     }
 
-    public Unit(int x, int y, Set<KnowledgeType> knownKnowledge, FactionType factionType) {
+    public Unit(int x, int y, Set<KnowledgeType> knownKnowledge, FactionType factionType, UnitType unitType) {
         this.x = x;
         this.y = y;
         this.knownKnowledge = knownKnowledge;
         this.factionType = factionType;
+        this.unitType = unitType;
     }
 
     public int getX() {
@@ -36,6 +39,14 @@ public abstract class Unit {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public UnitType getUnitType() {
+        return unitType;
+    }
+
+    public void setUnitType(UnitType unitType) {
+        this.unitType = unitType;
     }
 
     public Set<KnowledgeType> getKnownKnowledge() {

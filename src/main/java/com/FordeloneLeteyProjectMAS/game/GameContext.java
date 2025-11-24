@@ -4,10 +4,7 @@ import com.FordeloneLeteyProjectMAS.diplomacy.RelationManager;
 import com.FordeloneLeteyProjectMAS.map.Map;
 import com.FordeloneLeteyProjectMAS.map.Tile;
 import com.FordeloneLeteyProjectMAS.map.TileZoneType;
-import com.FordeloneLeteyProjectMAS.unit.FactionType;
-import com.FordeloneLeteyProjectMAS.unit.KnowledgeType;
-import com.FordeloneLeteyProjectMAS.unit.Master;
-import com.FordeloneLeteyProjectMAS.unit.Unit;
+import com.FordeloneLeteyProjectMAS.unit.*;
 
 import java.util.*;
 
@@ -109,6 +106,61 @@ public class GameContext {
 
     public Map getMap() {
         return gameMap;
+    }
+
+    public boolean isThereUnit(int x, int y){
+        for (Unit unit : units) {
+            if (unit.getX() == x && unit.getY() == y) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Unit getUnitAt(int x, int y){
+        for (Unit unit : units) {
+            if (unit.getX() == x && unit.getY() == y) {
+                return unit;
+            }
+        }
+        return null;
+    }
+
+    //print the game map in ascii (shows units)
+    //with 2 characters per tile for clarity
+    public void printGameMap(){
+        for (int y = 0; y < this.getMap().getHeight(); y++) {
+            for (int x = 0; x < this.getMap().getWidth(); x++) {
+                if(isThereUnit(x, y)){
+                    Unit unit = getUnitAt(x, y);
+                    if(unit.getUnitType() == UnitType.MASTER){
+                        switch (unit.getFactionType()) {
+                            case FACTION_HUMAN -> System.out.print("mH ");
+                            case FACTION_ORC -> System.out.print("mO ");
+                            case FACTION_ELF -> System.out.print("mE ");
+                            case FACTION_GOBLIN -> System.out.print("mG ");
+                        }
+                    } else if(unit.getUnitType() == UnitType.INFANTRY){
+                        switch (unit.getFactionType()) {
+                            case FACTION_HUMAN -> System.out.print("iH ");
+                            case FACTION_ORC -> System.out.print("iO ");
+                            case FACTION_ELF -> System.out.print("iE ");
+                            case FACTION_GOBLIN -> System.out.print("iG ");
+                        }
+                    } else {
+                        //unknown unit type
+                        System.out.print("xX ");
+                    }
+                } else {
+                    System.out.print(".. ");
+                }
+            }
+            System.out.println();
+        }
+        System.out.println("LEGEND:");
+        System.out.println("1st CHAR | m: Master, i: Infantry,");
+        System.out.println("2nd CHAR | H: Human, O: Orc, E: Elf, G: Goblin");
+        //we dont precize xX as it should be a bug / forgotten code
     }
 
 }

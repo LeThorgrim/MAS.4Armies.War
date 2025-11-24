@@ -8,12 +8,12 @@ public class Master extends Unit {
 
     //no knowledge constructor
     public Master(int x, int y, FactionType factionType) {
-        super(x, y, factionType);
+        super(x, y, factionType, UnitType.MASTER);
     }
 
     //normal constructor
     public Master(int x, int y, Set<KnowledgeType> knownKnowledge, FactionType factionType) {
-        super(x, y, knownKnowledge, factionType);
+        super(x, y, knownKnowledge, factionType, UnitType.MASTER);
     }
 
     @Override

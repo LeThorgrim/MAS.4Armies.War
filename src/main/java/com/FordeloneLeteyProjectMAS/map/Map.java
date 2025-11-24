@@ -40,4 +40,22 @@ public class Map {
         }
         return tiles[y * width + x];
     }
+
+    // Shows the map with zone types (TileZoneType)
+    public void printMapZoneTypes(){
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Tile tile = getTileAt(x, y);
+                switch (tile.getZoneType()) {
+                    case FACTION_HQ_HUMAN -> System.out.print("H ");
+                    case FACTION_HQ_ORC -> System.out.print("O ");
+                    case FACTION_HQ_ELF -> System.out.print("E ");
+                    case FACTION_HQ_GOBLIN -> System.out.print("G ");
+                    default -> System.out.print(". ");
+                }
+            }
+            System.out.println();
+        }
+        System.out.println("H: Human HQ zone, O: Orc HQ zone, E: Elf HQ zone, G: Goblin HQ zone, .: No faction zone");
+    }
 }

@@ -4,12 +4,12 @@ public class Infantry extends Unit{
 
     //no knowledge constructor
     public Infantry(int x, int y, FactionType factionType) {
-        super(x, y, factionType);
+        super(x, y, factionType, UnitType.INFANTRY);
     }
 
     //normal constructor
     public Infantry(int x, int y, java.util.Set<KnowledgeType> knownKnowledge, FactionType factionType) {
-        super(x, y, knownKnowledge, factionType);
+        super(x, y, knownKnowledge, factionType, UnitType.INFANTRY);
     }
 
     @Override
