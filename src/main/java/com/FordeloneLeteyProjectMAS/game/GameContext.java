@@ -27,7 +27,8 @@ public class GameContext {
         RelationManager.getInstance();
         //initialize units
         initializeMasters();
-        System.out.println("[GameContext] Game context initialized.");
+        System.out.println("[GameContext] Masters initialized");
+        System.out.println("[GameContext] Game context initialized");
 
         //TODO : play
     }
