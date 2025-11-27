@@ -44,13 +44,16 @@ public class RelationManager {
 
     public void declareWar(FactionType f1, FactionType f2) {
         Relation r = getRelation(f1, f2);
-        r.setAtWar(true);
-        r.setAllied(false);
+        r.setAtWar();
     }
 
     public void formAlliance(FactionType f1, FactionType f2) {
         Relation r = getRelation(f1, f2);
-        r.setAllied(true);
-        r.setAtWar(false);
+        r.setAllied();
+    }
+
+    public void declareNeutrality(FactionType f1, FactionType f2) {
+        Relation r = getRelation(f1, f2);
+        r.setNeutral();
     }
 }

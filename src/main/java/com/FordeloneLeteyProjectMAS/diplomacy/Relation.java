@@ -6,8 +6,7 @@ public class Relation {
     private final FactionType a;
     private final FactionType b;
 
-    private boolean atWar;
-    private boolean allied;
+    private RelationType relationType;
 
     public Relation(FactionType a, FactionType b) {
         if (a == b) {
@@ -15,8 +14,7 @@ public class Relation {
         }
         this.a = a;
         this.b = b;
-        this.atWar = false;
-        this.allied = false;
+        this.relationType = RelationType.NEUTRAL;
     }
 
     public boolean contains(FactionType f1, FactionType f2) {
@@ -31,17 +29,24 @@ public class Relation {
     }
 
     public boolean isAtWar() {
-        return atWar;
+        return this.relationType == RelationType.ENEMY;
     }
-    public void setAtWar(boolean atWar) {
-        this.atWar = atWar;
+    public void setAtWar() {
+        this.relationType = RelationType.ENEMY;
     }
 
     public boolean isAllied() {
-        return allied;
+        return this.relationType == RelationType.ALLY;
     }
-    public void setAllied(boolean allied) {
-        this.allied = allied;
+    public void setAllied() {
+        this.relationType = RelationType.ALLY;
+    }
+
+    public boolean isNeutral(){
+        return this.relationType == RelationType.NEUTRAL;
+    }
+    public void setNeutral() {
+        this.relationType = RelationType.NEUTRAL;
     }
 }
 
