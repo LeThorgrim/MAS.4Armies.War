@@ -6,6 +6,7 @@ import com.FordeloneLeteyProjectMAS.map.Tile;
 import com.FordeloneLeteyProjectMAS.map.TileZoneType;
 import com.FordeloneLeteyProjectMAS.unit.*;
 
+import java.time.Instant;
 import java.util.*;
 
 public class GameContext {
@@ -16,6 +17,8 @@ public class GameContext {
     private final Map gameMap;
     private final RelationManager relationManager =  null;
     private final List<Unit> units = new ArrayList<>();
+    private Boolean isGameOver = false;
+    private int turnNumber = 0;
 
     // Private constructor to prevent instantiation
     private GameContext() {
@@ -28,9 +31,9 @@ public class GameContext {
         //initialize units
         initializeMasters();
         System.out.println("[GameContext] Masters initialized");
+        initializeSoldiers();
+        System.out.println("[GameContext] Soldiers initialized");
         System.out.println("[GameContext] Game context initialized");
-
-        //TODO : play
     }
 
     private void initializeTileZoneTypes(){
@@ -164,4 +167,37 @@ public class GameContext {
         //we dont precize xX as it should be a bug / forgotten code
     }
 
+    public void playGame(){
+        System.out.println("[GameContext] Game started");
+        //main game loop
+        while(!isGameOver){
+            playTurn();
+        }
+        System.out.println("[GameContext] Game over");
+    }
+
+    //one turn has a duration of 1 second
+    private void playTurn(){
+        Instant startTurnTime = Instant.now();
+        turnNumber += 1;
+        System.out.println("========== TURN " + (turnNumber) + " ===========");
+        printGameMap();
+        //TODO : implement turn logic (movement, interactions, win conditions, etc.)
+
+        //end condition
+        if(turnNumber == 10){
+            isGameOver = true;
+        }
+
+        //ensure turn duration is 1 second
+        Instant endTurnTime = Instant.now();
+        long elapsedTime = java.time.Duration.between(startTurnTime, endTurnTime).toMillis();
+        if(elapsedTime < 1000){
+            try {
+                Thread.sleep(1000 - elapsedTime);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // problem during sleep (?)
+            }
+        }
+    }
 }

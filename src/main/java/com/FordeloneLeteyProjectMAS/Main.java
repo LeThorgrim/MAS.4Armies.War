@@ -7,5 +7,6 @@ public class Main {
         GameContext gameContext = GameContext.getInstance();
         gameContext.getMap().printMapZoneTypes();
         gameContext.printGameMap();
+        gameContext.playGame();
     }
 }
