@@ -17,9 +17,9 @@ public class Master extends Unit {
     }
 
     @Override
-    public void moveUnit(int x, int y) {
+    public boolean moveUnit(int x, int y) {
         // Masters do not move
-        return;
+        return true;
     }
 
     @Override
@@ -28,7 +28,6 @@ public class Master extends Unit {
         if (this.getFactionType() == otherUnit.getFactionType()) {
             Set<KnowledgeType> combinedKnowledge = this.getKnownKnowledge();
             combinedKnowledge.addAll(otherUnit.getKnownKnowledge());
-            //this.setKnownKnowledge(combinedKnowledge); //here or elsewhere ?
             otherUnit.setKnownKnowledge(combinedKnowledge);
         }
         // OTHER (ALLY;ENEMY;NEUTRAL) :

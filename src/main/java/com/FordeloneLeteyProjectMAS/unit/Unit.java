@@ -73,6 +73,8 @@ public abstract class Unit {
         this.factionType = factionType;
     }
 
-    public abstract void moveUnit(int x, int y);
+    //boolean to know if the move was successful (possible) or not
+    public abstract boolean moveUnit(int x, int y);
+    //when a unit interacts with another unit (both units must use this method)
     public abstract void interactWithUnit(Unit otherUnit);
 }
