@@ -70,7 +70,25 @@ public class Infantry extends Unit{
             combinedKnowledge.addAll(otherUnit.getKnownKnowledge());
             otherUnit.setKnownKnowledge(combinedKnowledge);
         }
-        //ENEMY : no knowledge shared (TODO: might add fight)
+        //ENEMY : coinflip (50% chance) to 'steal' 10% of knowledge
+        else if (RelationManager.getInstance().getRelation(this.getFactionType(), otherUnit.getFactionType()).isAtWar()) {
+            double randomValue = Math.random();
+            if (randomValue < 0.5) {
+                Set<KnowledgeType> combinedKnowledge = this.getKnownKnowledge();
+
+                //remove random 90% of knowledge from combinedKnowledge
+                int itemsToRemove = (combinedKnowledge.size() * 9) / 10;
+                KnowledgeType[] knowledgeArray = combinedKnowledge.toArray(new KnowledgeType[0]);
+                for (int i = 0; i < itemsToRemove; i++) {
+                    int randomIndex = (int) (Math.random() * knowledgeArray.length);
+                    combinedKnowledge.remove(knowledgeArray[randomIndex]);
+                }
+
+                //the rest is shared
+                combinedKnowledge.addAll(otherUnit.getKnownKnowledge());
+                otherUnit.setKnownKnowledge(combinedKnowledge);
+            }
+        }
         else {
             return;
         }

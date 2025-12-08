@@ -8,6 +8,7 @@ public abstract class Unit {
     private Set<KnowledgeType> knownKnowledge; //set = no duplicate knowledge
     private FactionType factionType;
     private UnitType unitType;
+    private int stamina; //to be used later for movement and actions
 
     public Unit(int x, int y, FactionType factionType, UnitType unitType) {
         this.x = x;
@@ -15,6 +16,7 @@ public abstract class Unit {
         this.knownKnowledge = Set.of();
         this.factionType = factionType;
         this.unitType = unitType;
+        this.stamina = 20;
     }
 
     public Unit(int x, int y, Set<KnowledgeType> knownKnowledge, FactionType factionType, UnitType unitType) {
@@ -23,6 +25,7 @@ public abstract class Unit {
         this.knownKnowledge = knownKnowledge;
         this.factionType = factionType;
         this.unitType = unitType;
+        this.stamina = 20;
     }
 
     public int getX() {
@@ -73,7 +76,15 @@ public abstract class Unit {
         this.factionType = factionType;
     }
 
-    //boolean to know if the move was successful (possible) or not
+    public int getStamina() {
+        return stamina;
+    }
+
+    public void setStamina(int stamina) {
+        this.stamina = stamina;
+    }
+
+    //boolean to know if the move was successful (possible) or not and moves the unit if possible
     public abstract boolean moveUnit(int x, int y);
     //when a unit interacts with another unit (both units must use this method)
     public abstract void interactWithUnit(Unit otherUnit);

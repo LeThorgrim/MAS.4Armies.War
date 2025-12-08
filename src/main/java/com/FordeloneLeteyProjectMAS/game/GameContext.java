@@ -26,6 +26,8 @@ public class GameContext {
         //initialize map
         gameMap = new Map(14, 10);
         initializeTileZoneTypes();
+        System.out.println("[GameContext] Map initialized");
+        gameMap.printMapZoneTypes();
         //initialize diplomacy
         RelationManager.getInstance();
         //initialize units
@@ -197,6 +199,9 @@ public class GameContext {
     private void playTurn(){
         Instant startTurnTime = Instant.now();
         //TODO : implement turn logic (movement, interactions, win conditions, etc.)
+        //move all units from the units list
+
+        //search for pairs of units that are next to each other and make them interact
 
         //end condition // TODO : DELETE
         if(turnNumber == 10){
