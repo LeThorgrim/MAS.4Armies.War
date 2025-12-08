@@ -92,7 +92,13 @@ public class GameContext {
     }
 
     private void initializeSoldiers(){
-        //TODO : init some soldiers for each faction
+        //Init 3 infantry units for each faction
+        for(FactionType faction : FactionType.values()){
+            for(int i = 0; i < 3; i++) {
+                Infantry tmpInfantry = new Infantry(-1, -1, faction);
+                spawnUnit(tmpInfantry, faction);
+            }
+        }
     }
 
     public static GameContext getInstance() {
@@ -132,7 +138,8 @@ public class GameContext {
 
     //print the game map in ascii (shows units)
     //with 2 characters per tile for clarity
-    public void printGameMap(){
+    public void printGameMap(int turnNumber){
+        System.out.println("\n========== TURN " + (turnNumber) + " ===========");
         for (int y = 0; y < this.getMap().getHeight(); y++) {
             for (int x = 0; x < this.getMap().getWidth(); x++) {
                 if(isThereUnit(x, y)){
@@ -165,6 +172,16 @@ public class GameContext {
         System.out.println("1st CHAR | m: Master, i: Infantry,");
         System.out.println("2nd CHAR | H: Human, O: Orc, E: Elf, G: Goblin");
         //we dont precize xX as it should be a bug / forgotten code
+
+        //print knowledge of each master
+        for (FactionType faction : FactionType.values()) {
+            Master master = getMasterOfFaction(faction);
+            if (master != null) {
+                int knowledgeCount = master.getKnownKnowledge().size();
+                int knowledgeTotal = KnowledgeType.values().length;
+                System.out.println(faction + ": " + knowledgeCount + "/" + knowledgeTotal);
+            }
+        }
     }
 
     public void playGame(){
@@ -179,15 +196,23 @@ public class GameContext {
     //one turn has a duration of 1 second
     private void playTurn(){
         Instant startTurnTime = Instant.now();
-        turnNumber += 1;
-        System.out.println("========== TURN " + (turnNumber) + " ===========");
-        printGameMap();
         //TODO : implement turn logic (movement, interactions, win conditions, etc.)
 
-        //end condition
+        //end condition // TODO : DELETE
         if(turnNumber == 10){
             isGameOver = true;
         }
+        //end condition
+        for (FactionType faction : FactionType.values()) {
+            if (didFactionWin(faction)) {
+                System.out.println("Faction " + faction + " has won the game!");
+                isGameOver = true;
+            }
+        }
+
+        //print map
+        turnNumber += 1;
+        printGameMap(turnNumber);
 
         //ensure turn duration is 1 second
         Instant endTurnTime = Instant.now();
@@ -199,5 +224,39 @@ public class GameContext {
                 Thread.currentThread().interrupt(); // problem during sleep (?)
             }
         }
+    }
+
+    //checks if he has 100% of the KnowledgeType(s)
+    private boolean didFactionWin(FactionType faction) {
+        Master masterOfFaction = getMasterOfFaction(faction);
+        return masterOfFaction != null && masterOfFaction.getKnownKnowledge().size() == KnowledgeType.values().length;
+    }
+
+    //finds master of the faction in the units list
+    private Master getMasterOfFaction(FactionType faction) {
+        for (Unit unit : units) {
+            if (unit.getUnitType() == UnitType.MASTER && unit.getFactionType() == faction) {
+                return (Master) unit;
+            }
+        }
+        return null;
+    }
+
+    //spawns a unit in his faction's HQ zone
+    //returns true if successful, false otherwise
+    private boolean spawnUnit(Unit unit, FactionType factionType){
+        //check for first free tile in faction HQ zone
+        for (int y = 0; y < gameMap.getHeight(); y++) {
+            for (int x = 0; x < gameMap.getWidth(); x++) {
+                Tile tile = gameMap.getTileAt(x, y);
+                if (tile.getZoneType().getFaction() == factionType && !isThereUnit(x, y)) {
+                    unit.setX(x);
+                    unit.setY(y);
+                    units.add(unit);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

@@ -6,7 +6,7 @@ public class Main {
     public static void main(String[] args) {
         GameContext gameContext = GameContext.getInstance();
         gameContext.getMap().printMapZoneTypes();
-        gameContext.printGameMap();
+        gameContext.printGameMap(999);
         gameContext.playGame();
     }
 }
