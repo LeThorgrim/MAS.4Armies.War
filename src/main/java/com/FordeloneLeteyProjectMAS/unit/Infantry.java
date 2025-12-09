@@ -4,6 +4,7 @@ import com.FordeloneLeteyProjectMAS.diplomacy.RelationManager;
 import com.FordeloneLeteyProjectMAS.diplomacy.RelationType;
 import com.FordeloneLeteyProjectMAS.map.Map;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class Infantry extends Unit{
@@ -26,6 +27,7 @@ public class Infantry extends Unit{
         if (deltaX <= 1 && deltaY <= 1) {
             this.setX(x);
             this.setY(y);
+            this.setStamina(getStamina() - 1);
             return true;
         }
         return false;
@@ -35,13 +37,13 @@ public class Infantry extends Unit{
     public void interactWithUnit(Unit otherUnit) {
         //SAME FACTION : shares 100% knowledge
         if (this.getFactionType() == otherUnit.getFactionType()) {
-            Set<KnowledgeType> combinedKnowledge = this.getKnownKnowledge();
+            Set<KnowledgeType> combinedKnowledge = new HashSet<>(this.getKnownKnowledge());
             combinedKnowledge.addAll(otherUnit.getKnownKnowledge());
             otherUnit.setKnownKnowledge(combinedKnowledge);
         }
         //ALLY : shares random 50% of knowledge
         else if (RelationManager.getInstance().getRelation(this.getFactionType(), otherUnit.getFactionType()).isAllied()) {
-            Set<KnowledgeType> combinedKnowledge = this.getKnownKnowledge();
+            Set<KnowledgeType> combinedKnowledge = new HashSet<>(this.getKnownKnowledge());
 
             //remove random 50% of knowledge from combinedKnowledge
             int itemsToRemove = combinedKnowledge.size() / 2;
@@ -57,7 +59,7 @@ public class Infantry extends Unit{
         }
         //NEUTRAL : shares random 25% of knowledge
         else if (RelationManager.getInstance().getRelation(this.getFactionType(), otherUnit.getFactionType()).isNeutral()) {
-            Set<KnowledgeType> combinedKnowledge = this.getKnownKnowledge();
+            Set<KnowledgeType> combinedKnowledge = new HashSet<>(this.getKnownKnowledge());
 
             //remove random 75% of knowledge from combinedKnowledge
             int itemsToRemove = (combinedKnowledge.size() * 3) / 4;
@@ -75,7 +77,7 @@ public class Infantry extends Unit{
         else if (RelationManager.getInstance().getRelation(this.getFactionType(), otherUnit.getFactionType()).isAtWar()) {
             double randomValue = Math.random();
             if (randomValue < 0.5) {
-                Set<KnowledgeType> combinedKnowledge = this.getKnownKnowledge();
+                Set<KnowledgeType> combinedKnowledge = new HashSet<>(this.getKnownKnowledge());
 
                 //remove random 90% of knowledge from combinedKnowledge
                 int itemsToRemove = (combinedKnowledge.size() * 9) / 10;
@@ -97,6 +99,35 @@ public class Infantry extends Unit{
 
     @Override
     public void playTurn(Map gameMap, java.util.List<Unit> allUnits) {
-        // Infantry specific turn actions can be implemented here
+        //just use the move method taking into account stamina and that some tiles are not accessible
+        //the tiles innaccessible are hq zones of other factions + tiles occupied by other units
+        if (getStamina() > 10) {
+            //try to move to a random adjacent tile
+            int newX = this.getX() + (int)(Math.random() * 3) - 1; // -1, 0, or 1
+            int newY = this.getY() + (int)(Math.random() * 3) - 1; // -1, 0, or 1
+
+            //check if the new tile is within bounds
+            if (newX >= 0 && newX < gameMap.getWidth() && newY >= 0 && newY < gameMap.getHeight()) {
+                //check if the tile is occupied by another unit
+                boolean occupied = false;
+                for (Unit unit : allUnits) {
+                    if (unit.getX() == newX && unit.getY() == newY && unit != this) {
+                        occupied = true;
+                        break;
+                    }
+                }
+
+                //check if the tile is an HQ zone of another faction
+                boolean hqZone = gameMap.isOtherHQZone(newX, newY, this.getFactionType());
+
+                if (!occupied && !hqZone) {
+                    moveUnit(newX, newY);
+                }
+            }
+        }
+        else if(getStamina() <= 10){
+            //rest to regain stamina
+            setStamina(getStamina() + 5);
+        }
     }
 }

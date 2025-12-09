@@ -4,20 +4,17 @@ public class Tile {
     private int x;
     private int y;
     private TileZoneType zoneType;
-    private TileType tileType;
 
     public Tile(){
         this.x = 0;
         this.y = 0;
         this.zoneType = TileZoneType.FACTION_NONE;
-        this.tileType = TileType.EMPTY;
     }
 
-    public Tile(int x, int y, TileZoneType zoneType, TileType tileType) {
+    public Tile(int x, int y, TileZoneType zoneType) {
         this.x = x;
         this.y = y;
         this.zoneType = zoneType;
-        this.tileType = tileType;
     }
 
     public int getX() {
@@ -42,13 +39,5 @@ public class Tile {
 
     public void setZoneType(TileZoneType zoneType) {
         this.zoneType = zoneType;
-    }
-
-    public TileType getTileType() {
-        return tileType;
-    }
-
-    public void setTileType(TileType tileType) {
-        this.tileType = tileType;
     }
 }

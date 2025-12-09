@@ -2,6 +2,7 @@ package com.FordeloneLeteyProjectMAS.unit;
 
 import com.FordeloneLeteyProjectMAS.map.Map;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class Master extends Unit {
@@ -26,10 +27,11 @@ public class Master extends Unit {
     public void interactWithUnit(Unit otherUnit) {
         // SAME FACTION : shares 100% knowledge
         if (this.getFactionType() == otherUnit.getFactionType()) {
-            Set<KnowledgeType> combinedKnowledge = this.getKnownKnowledge();
+            Set<KnowledgeType> combinedKnowledge = new HashSet<>(this.getKnownKnowledge());
             combinedKnowledge.addAll(otherUnit.getKnownKnowledge());
             otherUnit.setKnownKnowledge(combinedKnowledge);
         }
+
         // OTHER (ALLY;ENEMY;NEUTRAL) :
         // Shouldn't happen as they aren't supposed to move to the zone of another faction)
         else {
