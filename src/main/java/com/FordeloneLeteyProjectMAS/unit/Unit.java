@@ -1,7 +1,12 @@
 package com.FordeloneLeteyProjectMAS.unit;
 
+import com.FordeloneLeteyProjectMAS.map.Map;
+
+import java.util.HashSet;
 import java.util.Set;
 
+//The abstract class representing a unit in the game
+//It can be used to create new types of units by extending this class
 public abstract class Unit {
     private int x;
     private int y;
@@ -13,7 +18,7 @@ public abstract class Unit {
     public Unit(int x, int y, FactionType factionType, UnitType unitType) {
         this.x = x;
         this.y = y;
-        this.knownKnowledge = Set.of();
+        this.knownKnowledge = new HashSet<>();
         this.factionType = factionType;
         this.unitType = unitType;
         this.stamina = 20;
@@ -88,4 +93,6 @@ public abstract class Unit {
     public abstract boolean moveUnit(int x, int y);
     //when a unit interacts with another unit (both units must use this method)
     public abstract void interactWithUnit(Unit otherUnit);
+    //play function to be called each turn
+    public abstract void playTurn(Map gameMap, java.util.List<Unit> allUnits);
 }

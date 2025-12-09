@@ -19,6 +19,8 @@ public class GameContext {
     private final List<Unit> units = new ArrayList<>();
     private Boolean isGameOver = false;
     private int turnNumber = 0;
+    private int stepTurnMillis = 1000; //duration of one turn in milliseconds
+    private int maxTurns = 100; //max turns before game over (to avoid infinite games)
 
     // Private constructor to prevent instantiation
     private GameContext() {
@@ -35,6 +37,15 @@ public class GameContext {
         System.out.println("[GameContext] Masters initialized");
         initializeSoldiers();
         System.out.println("[GameContext] Soldiers initialized");
+        System.out.println("[GameContext] What time per turn (ms) ? Default is 1000ms");
+        Scanner scanner = new Scanner(System.in);
+        int ms = scanner.nextInt();
+        setTurnMillis(ms);
+        System.out.println("[GameContext] Each step will last: " + ms + " ms");
+        System.out.println("[GameContext] What maximum of turns ? Default is 100 turns");
+        int steps = scanner.nextInt();
+        setMaxTurns(steps);
+        System.out.println("[GameContext] The game will end after: " + steps + " turns");
         System.out.println("[GameContext] Game context initialized");
     }
 
@@ -198,13 +209,28 @@ public class GameContext {
     //one turn has a duration of 1 second
     private void playTurn(){
         Instant startTurnTime = Instant.now();
-        //TODO : implement turn logic (movement, interactions, win conditions, etc.)
         //move all units from the units list
+        for (Unit unit : units) {
+            unit.playTurn(getMap(), units);
+        }
 
         //search for pairs of units that are next to each other and make them interact
+        for (int i = 0; i < units.size(); i++) {
+            Unit unitA = units.get(i);
+            for (int j = i + 1; j < units.size(); j++) {
+                Unit unitB = units.get(j);
+                //check if they are next to each other (including diagonals)
+                int deltaX = Math.abs(unitA.getX() - unitB.getX());
+                int deltaY = Math.abs(unitA.getY() - unitB.getY());
+                if (deltaX <= 1 && deltaY <= 1) {
+                    unitA.interactWithUnit(unitB);
+                    unitB.interactWithUnit(unitA);
+                }
+            }
+        }
 
-        //end condition // TODO : DELETE
-        if(turnNumber == 10){
+        //end conditions
+        if(turnNumber == maxTurns){
             isGameOver = true;
         }
         //end condition
@@ -222,9 +248,9 @@ public class GameContext {
         //ensure turn duration is 1 second
         Instant endTurnTime = Instant.now();
         long elapsedTime = java.time.Duration.between(startTurnTime, endTurnTime).toMillis();
-        if(elapsedTime < 1000){
+        if(elapsedTime < stepTurnMillis){
             try {
-                Thread.sleep(1000 - elapsedTime);
+                Thread.sleep(stepTurnMillis - elapsedTime);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt(); // problem during sleep (?)
             }
@@ -263,5 +289,13 @@ public class GameContext {
             }
         }
         return false;
+    }
+
+    private void setTurnMillis(int stepTimeMillis) {
+        this.stepTurnMillis = stepTimeMillis;
+    }
+
+    private void setMaxTurns(int maxTurns) {
+        this.maxTurns = maxTurns;
     }
 }

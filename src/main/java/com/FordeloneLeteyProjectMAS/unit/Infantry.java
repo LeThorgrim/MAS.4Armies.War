@@ -2,6 +2,7 @@ package com.FordeloneLeteyProjectMAS.unit;
 
 import com.FordeloneLeteyProjectMAS.diplomacy.RelationManager;
 import com.FordeloneLeteyProjectMAS.diplomacy.RelationType;
+import com.FordeloneLeteyProjectMAS.map.Map;
 
 import java.util.Set;
 
@@ -92,5 +93,10 @@ public class Infantry extends Unit{
         else {
             return;
         }
+    }
+
+    @Override
+    public void playTurn(Map gameMap, java.util.List<Unit> allUnits) {
+        // Infantry specific turn actions can be implemented here
     }
 }

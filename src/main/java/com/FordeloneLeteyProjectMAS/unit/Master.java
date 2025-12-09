@@ -1,6 +1,6 @@
 package com.FordeloneLeteyProjectMAS.unit;
 
-// Faire 4 singleton Master pour chaque faction
+import com.FordeloneLeteyProjectMAS.map.Map;
 
 import java.util.Set;
 
@@ -35,6 +35,11 @@ public class Master extends Unit {
         else {
             return;
         }
+    }
+
+    @Override
+    public void playTurn(Map gameMap, java.util.List<Unit> allUnits) {
+        // Masters do not have actions during their turn
     }
 
 }
