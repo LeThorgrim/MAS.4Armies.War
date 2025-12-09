@@ -15,7 +15,7 @@ public class GameContext {
 
     private static GameContext instance = null;
     private final Map gameMap;
-    private final RelationManager relationManager =  null;
+    private RelationManager relationManager =  null;
     private final List<Unit> units = new ArrayList<>();
     private Boolean isGameOver = false;
     private int turnNumber = 0;
@@ -30,8 +30,12 @@ public class GameContext {
         initializeTileZoneTypes();
         System.out.println("[GameContext] Map initialized");
         gameMap.printMapZoneTypes();
-        //initialize diplomacy
-        RelationManager.getInstance();
+        //initialize diplomacy (Humans & Elfs are allies; Orcs & Goblins are allies the rest is neutral)
+        relationManager = RelationManager.getInstance();
+        relationManager.formAlliance(FactionType.FACTION_HUMAN, FactionType.FACTION_ELF);
+        relationManager.formAlliance(FactionType.FACTION_ORC, FactionType.FACTION_GOBLIN);
+        System.out.println("[GameContext] Diplomacy initialized");
+
         //initialize units
         initializeMasters();
         System.out.println("[GameContext] Masters initialized");
@@ -202,6 +206,7 @@ public class GameContext {
         //main game loop
         while(!isGameOver){
             playTurn();
+            playDiplomacy();
         }
         System.out.println("[GameContext] Game over");
     }
@@ -289,6 +294,26 @@ public class GameContext {
             }
         }
         return false;
+    }
+
+    private void playDiplomacy(){
+        //basic diplomacy concept : if one faction gets more than 75% knowledge, it declares war on all other factions
+        for (FactionType faction : FactionType.values()) {
+            Master master = getMasterOfFaction(faction);
+            if (master != null) {
+                int knowledgeCount = master.getKnownKnowledge().size();
+                int knowledgeTotal = KnowledgeType.values().length;
+                if ((knowledgeCount / (double) knowledgeTotal) >= 0.75) {
+                    //declare war on all other factions
+                    for (FactionType otherFaction : FactionType.values()) {
+                        if (otherFaction != faction && !RelationManager.getInstance().getRelation(faction, otherFaction).isAtWar()) {
+                            RelationManager.getInstance().declareWar(faction, otherFaction);
+                            System.out.println("[Diplomacy] " + faction + " has declared war on " + otherFaction + "!");
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void setTurnMillis(int stepTimeMillis) {
